@@ -58,8 +58,6 @@ class AYigsoftSampleCharacter : public ACharacter, public IAbilitySystemInterfac
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Ability, meta = (AllowPrivateAccess = "true"))
 	TArray<TSubclassOf<UAttributeSet>> attributeSets;
 
-	// NPC needs to initialize it in constructor
-	TObjectPtr<UAbilitySystemComponent> abilitySystemComponent;
 public:
 	AYigsoftSampleCharacter();
 
@@ -69,6 +67,9 @@ public:
 	void TryActivateAbilityByTags(const FGameplayTagContainer& tagContainer);
 
 protected:
+	// NPC needs to initialize it in constructor
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Ability)
+	TObjectPtr<UAbilitySystemComponent> abilitySystemComponent;
 
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);

@@ -18,7 +18,11 @@ class YIGSOFTSAMPLE_API UAbilityInputAction : public UInputAction
 public:
 	const FGameplayTagContainer& GetABilityTags() const;
 
+	const FGameplayTag& GetEventTag() const;
 private:
 	UPROPERTY(EditAnywhere, Category = Ability)
 	FGameplayTagContainer abilityTags;
+
+	UPROPERTY(EditAnywhere, Category = Ability)
+	FGameplayTag eventTag;
 };

@@ -11,6 +11,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "YigsoftSamplePlayerState.h"
+#include "AbilitySystemBlueprintLibrary.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -87,6 +88,11 @@ void AYigsoftSampleCharacter::OnAbilityAction(const FInputActionInstance& action
 {
 	const UAbilityInputAction* action = Cast<UAbilityInputAction>(actionInstance.GetSourceAction());
 	AssertNotNullReturn(action);
+
+	if (action->GetEventTag().IsValid())
+	{
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, action->GetEventTag(), {});
+	}
 
 	TryActivateAbilityByTags(action->GetABilityTags());
 }

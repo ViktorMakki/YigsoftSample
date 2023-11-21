@@ -7,3 +7,8 @@ const FGameplayTagContainer& UAbilityInputAction::GetABilityTags() const
 {
 	return abilityTags;
 }
+
+const FGameplayTag& UAbilityInputAction::GetEventTag() const
+{
+	return eventTag;
+}

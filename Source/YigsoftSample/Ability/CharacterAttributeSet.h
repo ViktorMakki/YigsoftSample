@@ -30,4 +30,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage")
 	FGameplayAttributeData damage;
 	ATTRIBUTE_ACCESSORS(UCharacterAttributeSet, damage);
+
+public:
+	void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) override;
+
 };
