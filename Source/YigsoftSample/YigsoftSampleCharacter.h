@@ -55,6 +55,9 @@ class AYigsoftSampleCharacter : public ACharacter, public IAbilitySystemInterfac
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Ability, meta = (AllowPrivateAccess = "true"))
 	TArray<TSubclassOf<UGameplayAbility>> defaultAbilities;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Ability, meta = (AllowPrivateAccess = "true"))
+	TArray<TSubclassOf<UAttributeSet>> attributeSets;
+
 	// NPC needs to initialize it in constructor
 	TObjectPtr<UAbilitySystemComponent> abilitySystemComponent;
 public:

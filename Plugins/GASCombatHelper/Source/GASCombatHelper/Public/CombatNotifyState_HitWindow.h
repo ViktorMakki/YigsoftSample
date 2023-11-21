@@ -23,7 +23,7 @@ enum class CombatDebugDrawOptions
  *
  */
 UCLASS()
-class UCombatNotifyState_HitWindow : public UAnimNotifyState
+class GASCOMBATHELPER_API UCombatNotifyState_HitWindow : public UAnimNotifyState
 {
 	GENERATED_BODY()
 

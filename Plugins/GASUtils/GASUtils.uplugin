@@ -2,21 +2,21 @@
 	"FileVersion": 3,
 	"Version": 1,
 	"VersionName": "1.0",
-	"FriendlyName": "GAS Combat",
-	"Description": "Tools for basic combat features, includes overridable anim notifys to get hit actors,  a Combo Attack Ability, Hit component ",
-	"Category": "GAS",
+	"FriendlyName": "GAS Utils",
+	"Description": "GAS helper functions and math functions ",
+	"Category": "Other",
 	"CreatedBy": "ViktorMakki",
 	"CreatedByURL": "",
 	"DocsURL": "",
 	"MarketplaceURL": "",
 	"SupportURL": "",
-	"CanContainContent": true,
+	"CanContainContent": false,
 	"IsBetaVersion": false,
 	"IsExperimentalVersion": false,
 	"Installed": false,
 	"Modules": [
 		{
-			"Name": "GASCombatHelper",
+			"Name": "GASUtils",
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
 			"PlatformAllowList": [
@@ -31,10 +31,6 @@
 		},
 		{
 			"Name": "GameplayTagsEditor",
-			"Enabled": true
-		},
-		{
-			"Name": "GASUtils",
 			"Enabled": true
 		}
 	]

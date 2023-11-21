@@ -8,7 +8,7 @@
 #include "CombatNotifyState_HitSphere.generated.h"
 
 UCLASS()
-class UCombatNotifyState_HitSphere : public UCombatNotifyState_HitWindow
+class GASCOMBATHELPER_API UCombatNotifyState_HitSphere : public UCombatNotifyState_HitWindow
 {
 	GENERATED_BODY()
 protected:

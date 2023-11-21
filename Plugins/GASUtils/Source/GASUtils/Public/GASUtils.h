@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
 
-class GASCOMBATHELPER_API FGASCombatHelperModule : public IModuleInterface
+class GASUTILS_API FGASUtilsModule : public IModuleInterface
 {
 public:
 	/** IModuleInterface implementation */

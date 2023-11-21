@@ -3,7 +3,7 @@
 
 #include "CombatNotifyState_HitWindow.h"
 #include "Macros.h"
-#include "CombatHitComponent.h"
+#include "CombatComponent.h"
 #include "Engine\World.h"
 #include "Components\SkeletalMeshComponent.h"
 
@@ -39,7 +39,7 @@ void UCombatNotifyState_HitWindow::NotifyTick(USkeletalMeshComponent* MeshComp, 
 	// Only send hit events in the game world
 	if (world->IsGameWorld())
 	{
-		UCombatHitComponent* hitComponent = owner->GetComponentByClass<UCombatHitComponent>();
+		UCombatComponent* hitComponent = owner->GetComponentByClass<UCombatComponent>();
 		AssertNotNullReturn(hitComponent);
 
 		const TArray<AActor*> hitActors = GetHitActors(owner, FrameDeltaTime);
@@ -60,7 +60,7 @@ void UCombatNotifyState_HitWindow::NotifyEnd(
 		AActor* owner = MeshComp->GetOwner();
 		AssertNotNullReturn(owner);
 
-		UCombatHitComponent* hitComponent = owner->GetComponentByClass<UCombatHitComponent>();
+		UCombatComponent* hitComponent = owner->GetComponentByClass<UCombatComponent>();
 		AssertNotNullReturn(hitComponent);
 
 		hitComponent->RemoveHitActors(_hitActionTag);

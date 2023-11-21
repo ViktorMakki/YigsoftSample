@@ -23,8 +23,8 @@ public:
 	// Inherited via IAbilitySystemInterface
 	UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
-	void InitAttributes(const TObjectPtr<UDataTable>& dataTable);
 protected:
-	TObjectPtr<UCharacterAttributeSet> attributeSet;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Ability")
 	TObjectPtr<USampleAbilitySystemComponent> abilitySystemComponent;
 };

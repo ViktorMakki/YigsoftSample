@@ -2,9 +2,9 @@
 
 using UnrealBuildTool;
 
-public class GASCombatHelper : ModuleRules
+public class GASUtils : ModuleRules
 {
-    public GASCombatHelper(ReadOnlyTargetRules Target) : base(Target)
+    public GASUtils(ReadOnlyTargetRules Target) : base(Target)
     {
         PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
@@ -40,8 +40,7 @@ public class GASCombatHelper : ModuleRules
                 "SlateCore",
                 "GameplayAbilities",
                 "GameplayTags",
-                "GameplayTasks",
-                "GASUtils"
+                "GameplayTasks"
 				// ... add private dependencies that you statically link with here ...	
 			}
             );

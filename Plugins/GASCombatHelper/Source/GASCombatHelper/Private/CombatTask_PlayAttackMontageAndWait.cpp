@@ -3,7 +3,7 @@
 #include "CombatTask_PlayAttackMontageAndWait.h"
 #include <AbilitySystemGlobals.h>
 #include <Macros.h>
-#include <CombatHitComponent.h>
+#include "CombatComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "Runtime/Engine/Classes/GameFramework/CharacterMovementComponent.h"
 
@@ -35,7 +35,7 @@ void UCombatTask_PlayAttackMontageAndWait::Activate()
 	AActor* actor = GetAvatarActor();
 	AssertNotNullReturn(actor);
 
-	UCombatHitComponent* hitComponent = actor->GetComponentByClass<UCombatHitComponent>();
+	UCombatComponent* hitComponent = actor->GetComponentByClass<UCombatComponent>();
 	AssertNotNullReturn(hitComponent);
 
 	hitComponent->_applyHitToActorWithActionTag.AddDynamic(
@@ -47,7 +47,7 @@ void UCombatTask_PlayAttackMontageAndWait::OnDestroy(bool AbilityEnded)
 	AActor* actor = GetAvatarActor();
 	if (actor)
 	{
-		UCombatHitComponent* meleeComponent = actor->GetComponentByClass<UCombatHitComponent>();
+		UCombatComponent* meleeComponent = actor->GetComponentByClass<UCombatComponent>();
 		if (meleeComponent)
 		{
 			meleeComponent->_applyHitToActorWithActionTag.RemoveDynamic(

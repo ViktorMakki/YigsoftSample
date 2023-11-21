@@ -13,7 +13,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FApplyHitToActor, AActor*, hitActor)
  *
  */
 UCLASS()
-class UCombatTask_PlayAttackMontageAndWait : public UAbilityTask_PlayMontageAndWait
+class GASCOMBATHELPER_API UCombatTask_PlayAttackMontageAndWait : public UAbilityTask_PlayMontageAndWait
 {
 	GENERATED_BODY()
 

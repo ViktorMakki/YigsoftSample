@@ -49,7 +49,7 @@
 // returnVal: The value to return with if the ptr is nullptr
 #define CheckNotNullReturnVal(ptr, returnVal) \
 	{                                         \
-		if (!ensure(ptr))                     \
+		if (!ptr)                             \
 		{                                     \
 			return returnVal;                 \
 		}                                     \

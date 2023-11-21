@@ -175,11 +175,13 @@ void AYigsoftSampleCharacter::InitializeAbilitySystemComponent()
 
 void AYigsoftSampleCharacter::InitializeAttributeSet(const TObjectPtr<UDataTable>& inDefaultAttributes)
 {
-	AYigsoftSamplePlayerState* playerState = GetPlayerState<AYigsoftSamplePlayerState>();
-	CheckNotNullReturn(playerState);
-
 	AssertNotNullReturn(inDefaultAttributes);
-	playerState->InitAttributes(inDefaultAttributes);
+	AssertNotNullReturn(abilitySystemComponent);
+
+	for (const auto& attribute : attributeSets)
+	{
+		abilitySystemComponent->InitStats(attribute, inDefaultAttributes);
+	}
 }
 
 void AYigsoftSampleCharacter::GiveDefaultAbilities(const TArray<TSubclassOf<UGameplayAbility>>& inDefaultAbilities)
