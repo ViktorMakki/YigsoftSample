@@ -1,0 +1,13 @@
+Agenda:
+
+ - Gameplay events.
+	- Input attack event to continue combo
+ - Navigate trough the Attack ability / its a complex ability
+	- in unreal check the source
+ - Create NPC Base
+	- Hit Ability for NPC
+ - Setup an attributeSet for the characters
+	- With DataTable
+ - Gameplay effects
+	- ApplyHitEffect
+ - Motion warping if we have time left

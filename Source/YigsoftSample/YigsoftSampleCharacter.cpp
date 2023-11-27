@@ -10,6 +10,8 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "YigsoftSamplePlayerState.h"
+#include "AbilitySystemBlueprintLibrary.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -20,7 +22,7 @@ AYigsoftSampleCharacter::AYigsoftSampleCharacter()
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
-		
+
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
@@ -54,10 +56,23 @@ AYigsoftSampleCharacter::AYigsoftSampleCharacter()
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
 
+UAbilitySystemComponent* AYigsoftSampleCharacter::GetAbilitySystemComponent() const
+{
+	return abilitySystemComponent;
+}
+
+void AYigsoftSampleCharacter::TryActivateAbilityByTags(const FGameplayTagContainer& tagContainer)
+{
+	GetAbilitySystemComponent()->TryActivateAbilitiesByTag(tagContainer, false);
+}
+
 void AYigsoftSampleCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
+
+	InitializeAbilitySystemComponent();
+	InitializeAttributeSet(defaultAttributes);
 
 	//Add Input Mapping Context
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
@@ -69,6 +84,19 @@ void AYigsoftSampleCharacter::BeginPlay()
 	}
 }
 
+void AYigsoftSampleCharacter::OnAbilityAction(const FInputActionInstance& actionInstance)
+{
+	const UAbilityInputAction* action = Cast<UAbilityInputAction>(actionInstance.GetSourceAction());
+	AssertNotNullReturn(action);
+
+	if (action->GetEventTag().IsValid())
+	{
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, action->GetEventTag(), {});
+	}
+
+	TryActivateAbilityByTags(action->GetABilityTags());
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Input
 
@@ -76,10 +104,11 @@ void AYigsoftSampleCharacter::SetupPlayerInputComponent(UInputComponent* PlayerI
 {
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
-		
-		// Jumping
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+
+		for (const auto* inputAction : abilityInputActions)
+		{
+			EnhancedInputComponent->BindAction(inputAction, ETriggerEvent::Triggered, this, &AYigsoftSampleCharacter::OnAbilityAction);
+		}
 
 		// Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AYigsoftSampleCharacter::Move);
@@ -106,7 +135,7 @@ void AYigsoftSampleCharacter::Move(const FInputActionValue& Value)
 
 		// get forward vector
 		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	
+
 		// get right vector 
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
@@ -126,5 +155,46 @@ void AYigsoftSampleCharacter::Look(const FInputActionValue& Value)
 		// add yaw and pitch input to controller
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
+	}
+}
+
+void AYigsoftSampleCharacter::InitializeAbilitySystemComponent()
+{
+	AYigsoftSamplePlayerState* playerState = GetPlayerState<AYigsoftSamplePlayerState>();
+
+	// Initialize ability system component for player characters
+	if (playerState)
+	{
+		abilitySystemComponent = playerState->GetAbilitySystemComponent();
+		AssertNotNullReturn(abilitySystemComponent);
+
+		abilitySystemComponent->InitAbilityActorInfo(playerState, this);
+	}
+	// Initialize ability system component for NPCs
+	else if (abilitySystemComponent)
+	{
+		abilitySystemComponent->InitAbilityActorInfo(this, this);
+	}
+
+	GiveDefaultAbilities(defaultAbilities);
+}
+
+void AYigsoftSampleCharacter::InitializeAttributeSet(const TObjectPtr<UDataTable>& inDefaultAttributes)
+{
+	AssertNotNullReturn(inDefaultAttributes);
+	AssertNotNullReturn(abilitySystemComponent);
+
+	for (const auto& attribute : attributeSets)
+	{
+		abilitySystemComponent->InitStats(attribute, inDefaultAttributes);
+	}
+}
+
+void AYigsoftSampleCharacter::GiveDefaultAbilities(const TArray<TSubclassOf<UGameplayAbility>>& inDefaultAbilities)
+{
+	AssertNotNullReturn(abilitySystemComponent);
+	for (const auto& ability : inDefaultAbilities)
+	{
+		abilitySystemComponent->GiveAbility(ability);
 	}
 }

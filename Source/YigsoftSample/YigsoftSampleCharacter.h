@@ -5,6 +5,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
+#include "AbilitySystemInterface.h"
+#include "AbilitySystemComponent.h"
+#include "AbilityInputAction.h"
+
 #include "YigsoftSampleCharacter.generated.h"
 
 class USpringArmComponent;
@@ -15,8 +19,8 @@ struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
-UCLASS(config=Game)
-class AYigsoftSampleCharacter : public ACharacter
+UCLASS(config = Game)
+class AYigsoftSampleCharacter : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -27,14 +31,14 @@ class AYigsoftSampleCharacter : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
-	
+
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputMappingContext* DefaultMappingContext;
 
-	/** Jump Input Action */
+	/** Ability Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* JumpAction;
+	TArray< UAbilityInputAction* > abilityInputActions;
 
 	/** Move Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -44,23 +48,45 @@ class AYigsoftSampleCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* LookAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Attributes, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr <UDataTable> defaultAttributes;
+
+	// Abilities that will be added by default on spawn
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Ability, meta = (AllowPrivateAccess = "true"))
+	TArray<TSubclassOf<UGameplayAbility>> defaultAbilities;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Ability, meta = (AllowPrivateAccess = "true"))
+	TArray<TSubclassOf<UAttributeSet>> attributeSets;
+
 public:
 	AYigsoftSampleCharacter();
-	
+
+	UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+	UFUNCTION(BlueprintCallable, Category = "Ability")
+	void TryActivateAbilityByTags(const FGameplayTagContainer& tagContainer);
 
 protected:
+	// NPC needs to initialize it in constructor
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Ability)
+	TObjectPtr<UAbilitySystemComponent> abilitySystemComponent;
 
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
-			
 
-protected:
+	virtual void InitializeAbilitySystemComponent();
+
+	// NPC needs to override this to initialize its own attributeSets
+	virtual void InitializeAttributeSet(const TObjectPtr<UDataTable>& defaultAttributes);
+
+	virtual void GiveDefaultAbilities(const TArray<TSubclassOf<UGameplayAbility>>& defaultAbilities);
+
 	// APawn interface
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	
+	void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
 	// To add mapping context
 	virtual void BeginPlay();
 
@@ -69,5 +95,9 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+private:
+	void OnAbilityAction(const FInputActionInstance& action);
+
 };
 
