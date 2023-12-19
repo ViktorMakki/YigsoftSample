@@ -17,21 +17,24 @@ class YIGSOFTSAMPLE_API UCharacterAttributeSet : public UAttributeSet
 {
 	GENERATED_BODY()
 
+public:
+	ATTRIBUTE_ACCESSORS(UCharacterAttributeSet, health);
+
+	ATTRIBUTE_ACCESSORS(UCharacterAttributeSet, maxHealth);
+
+	ATTRIBUTE_ACCESSORS(UCharacterAttributeSet, damage);
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Health")
 	FGameplayAttributeData health;
-	ATTRIBUTE_ACCESSORS(UCharacterAttributeSet, health);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Health")
 	FGameplayAttributeData maxHealth;
-	ATTRIBUTE_ACCESSORS(UCharacterAttributeSet, maxHealth);
 
-	// Temporary meta attribute, not replicated
+	// Temporary meta attribute
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage")
 	FGameplayAttributeData damage;
-	ATTRIBUTE_ACCESSORS(UCharacterAttributeSet, damage);
 
 public:
-	void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) override;
-
+	void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
 };

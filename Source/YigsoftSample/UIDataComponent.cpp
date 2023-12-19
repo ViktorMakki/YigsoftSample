@@ -2,6 +2,9 @@
 
 
 #include "UIDataComponent.h"
+#include "Macros.h"
+#include "AbilitySystemComponent.h"
+#include "Ability/CharacterAttributeSet.h"
 
 // Sets default values for this component's properties
 UUIDataComponent::UUIDataComponent()
@@ -34,11 +37,28 @@ void UUIDataComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 float UUIDataComponent::GetHealth() const
 {
-	return 30.f;
+	AActor* owner = GetOwner();
+	AssertNotNullReturnVal(owner, 0.f);
+
+	UAbilitySystemComponent* abilitySystem = owner->GetComponentByClass<UAbilitySystemComponent>();
+	CheckNotNullReturnVal(abilitySystem, 0.f);
+
+	const UCharacterAttributeSet* characterAttributes = Cast<UCharacterAttributeSet>(abilitySystem->GetAttributeSet(UCharacterAttributeSet::StaticClass()));
+	CheckNotNullReturnVal(characterAttributes, 0.f);
+
+	return characterAttributes->Gethealth();
 }
 
 float UUIDataComponent::GetMaxHealth() const
 {
-	return 100.f;
-}
+	AActor* owner = GetOwner();
+	AssertNotNullReturnVal(owner, 0.f);
 
+	UAbilitySystemComponent* abilitySystem = owner->GetComponentByClass<UAbilitySystemComponent>();
+	CheckNotNullReturnVal(abilitySystem, 0.f);
+
+	const UCharacterAttributeSet* characterAttributes = Cast<UCharacterAttributeSet>(abilitySystem->GetAttributeSet(UCharacterAttributeSet::StaticClass()));
+	CheckNotNullReturnVal(characterAttributes, 0.f);
+
+	return characterAttributes->GetmaxHealth();
+}

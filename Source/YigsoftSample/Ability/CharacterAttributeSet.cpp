@@ -3,8 +3,12 @@
 
 #include "CharacterAttributeSet.h"
 
-void UCharacterAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
+
+void UCharacterAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
 {
-	Super::PostAttributeChange(Attribute, OldValue, NewValue);
-	UE_LOG(LogTemp, Warning, TEXT("damage: %f"), NewValue);
+	Super::PostGameplayEffectExecute(Data);
+
+	float newHealth = FMath::Max(0.f, Gethealth() - Getdamage());
+	Sethealth(newHealth);
+	Setdamage(0.f);
 }
